@@ -9,26 +9,28 @@ export default function HeroBanner({ trackMode, activeMethod, unitSystem }) {
   const tempDisplay = isMetric ? `${activeMethod.tempC}°C` : `${activeMethod.tempF}°F`;
 
   return (
-    <section className="relative overflow-hidden rounded-3xl mb-10 transition-all duration-700 shadow-2xl border border-white/10 group">
-      {/* Background Image with Dark Vignette Overlay */}
+    <section className={`relative overflow-hidden rounded-3xl mb-10 transition-all duration-700 shadow-2xl border ${
+      isCoffee ? 'glass-panel-amber border-amber-gold/30' : 'glass-panel-sage border-sage-500/35'
+    } group`}>
+      {/* Dynamic Background Image inside Hero Container */}
       <div className="absolute inset-0 z-0">
         <img
           key={heroImage}
           src={heroImage}
           alt={activeMethod.name}
-          className="w-full h-full object-cover object-center transform scale-105 filter brightness-75 contrast-110 group-hover:scale-100 transition-transform duration-1000"
+          className="w-full h-full object-cover object-center transform scale-105 filter brightness-[0.7] contrast-110 group-hover:scale-100 transition-transform duration-1000"
         />
         <div className={`absolute inset-0 ${
           isCoffee 
-            ? 'bg-gradient-to-r from-espresso-950 via-espresso-950/90 to-transparent' 
-            : 'bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent'
+            ? 'bg-gradient-to-r from-espresso-950 via-espresso-950/85 to-transparent' 
+            : 'bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent'
         }`} />
         <div className="absolute inset-0 bg-gradient-to-t from-espresso-950 via-transparent to-transparent opacity-90" />
       </div>
 
       {/* Hero Content Overlay */}
       <div className="relative z-10 p-8 md:p-12 lg:p-14 max-w-3xl">
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-xl text-xs uppercase tracking-widest font-bold mb-4 text-cream-light border border-white/20 shadow-lg">
+        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/50 backdrop-blur-xl text-xs uppercase tracking-widest font-extrabold mb-4 text-cream-light border border-white/20 shadow-lg">
           <Sparkles className={`w-3.5 h-3.5 ${isCoffee ? 'text-amber-gold' : 'text-sage-300'}`} />
           <span>{isCoffee ? 'Home Specialty Coffee Track' : 'Fine Tea Steeping Track'}</span>
         </div>

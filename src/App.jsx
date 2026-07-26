@@ -33,6 +33,7 @@ export default function App() {
   };
 
   const isCoffee = trackMode === 'coffee';
+  const heroImage = activeMethod.heroImage || (isCoffee ? '/coffee_setup.jpg' : '/tea_kettle.jpg');
 
   // Math for dry dose calculation
   const totalWaterMl = cupCount * cupMl;
@@ -40,88 +41,109 @@ export default function App() {
   const dryDoseGrams = totalWaterMl / ratio;
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${
+    <div className={`min-h-screen relative transition-colors duration-500 ${
       isCoffee ? 'bg-espresso-950 text-cream-soft' : 'bg-slate-950 text-cream-soft'
     }`}>
       
-      {/* 1. Header Bar */}
-      <Header
-        trackMode={trackMode}
-        setTrackMode={handleTrackSwitch}
-        unitSystem={unitSystem}
-        setUnitSystem={setUnitSystem}
-        isMuted={isMuted}
-        setIsMuted={setIsMuted}
-      />
+      {/* Full-Page Dynamic Method Background Image with Parallax Vignette (Scrolls across entire app) */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <img
+          key={heroImage}
+          src={heroImage}
+          alt={activeMethod.name}
+          className="w-full h-full object-cover object-center transform scale-110 filter brightness-[0.42] contrast-125 transition-all duration-1000 ease-in-out"
+        />
+        <div className={`absolute inset-0 ${
+          isCoffee
+            ? 'bg-gradient-to-b from-espresso-950/75 via-espresso-950/85 to-espresso-950'
+            : 'bg-gradient-to-b from-slate-950/75 via-slate-950/85 to-slate-950'
+        }`} />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-transparent via-black/40 to-black/80" />
+      </div>
 
-      {/* Main Workspace Container */}
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+      {/* App Main Body Layer */}
+      <div className="relative z-10">
         
-        {/* 2. Hero Editorial Banner */}
-        <HeroBanner
+        {/* 1. Header Bar */}
+        <Header
           trackMode={trackMode}
-          activeMethod={activeMethod}
+          setTrackMode={handleTrackSwitch}
           unitSystem={unitSystem}
+          setUnitSystem={setUnitSystem}
+          isMuted={isMuted}
+          setIsMuted={setIsMuted}
         />
 
-        {/* 3. Core Calculator & Multi-Phase Timer Layout */}
-        <div className={`grid grid-cols-1 ${isSplitScreen ? 'lg:grid-cols-12 gap-6' : 'lg:grid-cols-2 gap-8'}`}>
+        {/* Main Workspace Container */}
+        <main className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
           
-          {/* Left Pane: Precision Ratio & Cup Scaling Calculator */}
-          <div className={isSplitScreen ? 'lg:col-span-5' : ''}>
-            <PrecisionCalculator
-              trackMode={trackMode}
-              methods={methods}
-              activeMethod={activeMethod}
-              setActiveMethod={setActiveMethod}
-              cupCount={cupCount}
-              setCupCount={setCupCount}
-              cupMl={cupMl}
-              setCupMl={setCupMl}
-              customRatio={customRatio}
-              setCustomRatio={setCustomRatio}
-              unitSystem={unitSystem}
-            />
+          {/* 2. Hero Editorial Banner */}
+          <HeroBanner
+            trackMode={trackMode}
+            activeMethod={activeMethod}
+            unitSystem={unitSystem}
+          />
+
+          {/* 3. Core Calculator & Multi-Phase Timer Layout */}
+          <div className={`grid grid-cols-1 ${isSplitScreen ? 'lg:grid-cols-12 gap-6' : 'lg:grid-cols-2 gap-8'}`}>
+            
+            {/* Left Pane: Precision Ratio & Cup Scaling Calculator */}
+            <div className={isSplitScreen ? 'lg:col-span-5' : ''}>
+              <PrecisionCalculator
+                trackMode={trackMode}
+                methods={methods}
+                activeMethod={activeMethod}
+                setActiveMethod={setActiveMethod}
+                cupCount={cupCount}
+                setCupCount={setCupCount}
+                cupMl={cupMl}
+                setCupMl={setCupMl}
+                customRatio={customRatio}
+                setCustomRatio={setCustomRatio}
+                unitSystem={unitSystem}
+              />
+            </div>
+
+            {/* Right Pane: Multi-Phase Countdown Timer */}
+            <div className={isSplitScreen ? 'lg:col-span-7' : ''}>
+              <MultiPhaseTimer
+                trackMode={trackMode}
+                activeMethod={activeMethod}
+                dryDoseGrams={dryDoseGrams}
+                isMuted={isMuted}
+              />
+            </div>
+
           </div>
 
-          {/* Right Pane: Multi-Phase Countdown Timer */}
-          <div className={isSplitScreen ? 'lg:col-span-7' : ''}>
-            <MultiPhaseTimer
-              trackMode={trackMode}
-              activeMethod={activeMethod}
-              dryDoseGrams={dryDoseGrams}
-              isMuted={isMuted}
-            />
+          {/* 4. Integrated Masterclass Video Hub & Split Screen */}
+          <MasterclassHub
+            trackMode={trackMode}
+            isSplitScreen={isSplitScreen}
+            setIsSplitScreen={setIsSplitScreen}
+            activeVideo={activeVideo}
+            setActiveVideo={setActiveVideo}
+          />
+
+          {/* 5. Extraction Nuance & Troubleshooting Hub */}
+          <TroubleshootingHub trackMode={trackMode} />
+
+        </main>
+
+        {/* App Footer */}
+        <footer className="mt-16 border-t border-white/10 py-8 px-4 text-center text-xs text-cream-soft/50 backdrop-blur-xl bg-black/40">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span className="font-serif font-bold text-cream-light text-sm">BrewCraft: The Art of Extraction</span>
+              <p className="mt-0.5">Precision Specialty Coffee & Fine Tea Brewing Application</p>
+            </div>
+            <div className="text-cream-soft/40">
+              Designed for Home Brewing Excellence • Metric & Imperial Support
+            </div>
           </div>
+        </footer>
 
-        </div>
-
-        {/* 4. Integrated Masterclass Video Hub & Split Screen */}
-        <MasterclassHub
-          trackMode={trackMode}
-          isSplitScreen={isSplitScreen}
-          setIsSplitScreen={setIsSplitScreen}
-          activeVideo={activeVideo}
-          setActiveVideo={setActiveVideo}
-        />
-
-        {/* 5. Extraction Nuance & Troubleshooting Hub */}
-        <TroubleshootingHub trackMode={trackMode} />
-
-      </main>
-
-      {/* App Footer */}
-      <footer className="mt-16 border-t border-white/10 py-8 px-4 text-center text-xs text-cream-soft/50">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <span className="font-serif font-bold text-cream-light text-sm">BrewCraft: The Art of Extraction</span>
-            <p className="mt-0.5">Precision Specialty Coffee & Fine Tea Brewing Application</p>
-          </div>
-          <div className="text-cream-soft/40">
-            Designed for Home Brewing Excellence • Metric & Imperial Support
-          </div>
-        </div>
-      </footer>
+      </div>
 
     </div>
   );
