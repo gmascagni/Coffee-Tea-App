@@ -1,4 +1,4 @@
-name: Deploy BrewCraft to GitHub Pages
+name: Deploy The Brew App to GitHub Pages
 
 on:
   push:
